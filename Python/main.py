@@ -3,7 +3,7 @@ import logging
 import os
 from aiogram import Bot, Dispatcher, types
 from dotenv import load_dotenv
-from openai.agents import AssistantClient
+from agents import Agent
 from tools import create_tools
 from spam_storage import save_spam_message
 
@@ -23,7 +23,8 @@ logger = logging.getLogger(__name__)
 tools = create_tools(bot, TARGET_GROUP_ID)
 
 # Конфигурация AI Agent
-assistant = AssistantClient(
+# assistant = AssistantClient(
+assistant = Agent(
     name="AntiSpamAgent",
     instructions="""
     Ты - продвинутый анти-спам бот для Telegram. Анализируй сообщения по следующим критериям:

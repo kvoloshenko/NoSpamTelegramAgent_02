@@ -1,5 +1,5 @@
 from aiogram import Bot
-from openai.agents import tool
+from agents import tool
 import logging
 
 logger = logging.getLogger(__name__)
