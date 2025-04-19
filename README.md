@@ -1,5 +1,11 @@
 # NoSpamTelegram_02
 
+## OpenAI Agents SDK Ollama
+https://mer.vin/2025/03/openai-agents-sdk-ollama/
+
+https://youtu.be/LYMwLixmTZQ?si=nAhJTWrHmhKb-Ar4
+
+---
 Для реализации анти-спам бота с использованием подхода AI Agents от OpenAI, мы переработаем структуру проекта, интегрировав Agents SDK. Вот обновленные модули:
 
 **main.py**
