@@ -7,6 +7,7 @@ from agents import Agent
 from bot_tools import create_tools
 from spam_storage import save_spam_message
 
+os.environ["OPENAI_API_KEY"] ="No Need"
 load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')

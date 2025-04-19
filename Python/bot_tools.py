@@ -6,10 +6,11 @@ logger = logging.getLogger(__name__)
 
 def create_tools(bot: Bot, target_group_id: str):
     @tool
-    async def block_user(user_id: int, chat_id: int):
+    # async def block_user(user_id: int, chat_id: int):
+    def block_user(user_id: int, chat_id: int):
         """Блокирует пользователя. Параметры: user_id, chat_id"""
         try:
-            await bot.ban_chat_member(chat_id, user_id)
+            # await bot.ban_chat_member(chat_id, user_id)
             logger.info(f"Blocked user {user_id}")
             return {"status": "success"}
         except Exception as e:
@@ -46,7 +47,8 @@ def create_tools(bot: Bot, target_group_id: str):
     async def save_spam(sender_name: str, message_text: str):
         """Сохраняет спам в базу. Параметры: sender_name, message_text"""
         try:
-            save_spam_message(sender_name, message_text)
+            # TODO
+            # save_spam_message(sender_name, message_text)
             logger.info("Spam saved")
             return {"status": "success"}
         except Exception as e:
