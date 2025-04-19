@@ -41,22 +41,22 @@ async def handle_message(message: types.Message):
     # is_spam = False
     # is_spam = True
 
-    if is_spam:
-        # await message.reply("Внимание: это сообщение может быть спамом.")
-        # TODO
-        save_spam_message(
-            sender_full_name=message.from_user.full_name,
-            message_text=message.text
-        )
-        # Пересылка сообщения в другую группу
-        if TARGET_GROUP_ID:
-            await forward_to_group(message, TARGET_GROUP_ID)
-        else:
-            logger.warning("ID целевой группы не указан в .env")
-        await delete_user_messages(message)
-        # await block_user(message)
-    else:
-        logger.info(f"Сообщение не является спамом: {message.text[:50]}...")
+    # if is_spam:
+    #     # await message.reply("Внимание: это сообщение может быть спамом.")
+    #     # TODO
+    #     save_spam_message(
+    #         sender_full_name=message.from_user.full_name,
+    #         message_text=message.text
+    #     )
+    #     # Пересылка сообщения в другую группу
+    #     if TARGET_GROUP_ID:
+    #         await forward_to_group(message, TARGET_GROUP_ID)
+    #     else:
+    #         logger.warning("ID целевой группы не указан в .env")
+    #     await delete_user_messages(message)
+    #     # await block_user(message)
+    # else:
+    #     logger.info(f"Сообщение не является спамом: {message.text[:50]}...")
 
 async def main():
     logger.info("Запуск бота...")
