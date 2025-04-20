@@ -1,19 +1,20 @@
-import logging
-from dotenv import load_dotenv
+from agents import Agent, Runner, OpenAIChatCompletionsModel, AsyncOpenAI
 import os
-from langchain_ollama import ChatOllama
-from langchain_core.messages import HumanMessage
+from dotenv import load_dotenv
+
+os.environ["OPENAI_API_KEY"] ="No Need"
 
 load_dotenv()
 
 LOCAL_LLM = os.getenv('LOCAL_LLM')
 print(f'LOCAL_LLM ={LOCAL_LLM }')
 
-logger = logging.getLogger(__name__)
+model = OpenAIChatCompletionsModel(
+    model=LOCAL_LLM,
+    openai_client=AsyncOpenAI(base_url="http://localhost:11434/v1")
+)
 
-async def check_spam(topic: str) -> bool:
-
-    prompt = """Ты — высокоточная система детекции спама для Telegram. Анализируй сообщения строго по нижеуказанным правилам.
+instructions="""Ты — высокоточная система детекции спама для Telegram. Анализируй сообщения строго по нижеуказанным правилам.
 
 ### Критерии СПАМА (отвечать "SPAM"):
 1. **Финансовые обещания**
@@ -56,26 +57,14 @@ SPAM
 ИЛИ
 NOT_SPAM
 
-Анализируемое сообщение:
-{question}"""
-
-    try:
-        # Инициализация локальной языковой модели с параметрами
-        # local_llm = "llama3.2:3b-instruct-fp16"
-        # local_llm = "deepseek-r1:14b"
-        llm = ChatOllama(model=LOCAL_LLM, temperature=0)
-
-        # Формирование запроса для LLM
-        # print(f'text={topic}')
-        prompt_formatted = prompt.format(question=topic)
-        # Отправка запроса (сформированного промпта) в модель и получение ответа
-        generation = llm.invoke([HumanMessage(content=prompt_formatted)])
-        model_response = generation.content
-        print(f'model_response={model_response}')
-        print(type(model_response))
+    """
 
 
-        return model_response == "SPAM"
-    except Exception as e:
-        logger.error(f"Ошибка при проверке на спам: {e}")
-        return False
+agent = Agent(name="AntiSpamAgent",
+              instructions=instructions,
+              model=model)
+
+msg="Здравствуйте! Есть возможность получать от 195 долларов в день. Заинтересованы? Пишите в личные сообщения"
+
+result = Runner.run_sync(agent, msg)
+print(result.final_output)
