@@ -1,6 +1,7 @@
-from agents import Agent, Runner, OpenAIChatCompletionsModel, AsyncOpenAI
+from agents import Agent, Runner, OpenAIChatCompletionsModel, AsyncOpenAI, function_tool
 import os
 from dotenv import load_dotenv
+from spam_storage import save_spam_message
 
 os.environ["OPENAI_API_KEY"] ="No Need"
 
@@ -13,6 +14,19 @@ model = OpenAIChatCompletionsModel(
     model=LOCAL_LLM,
     openai_client=AsyncOpenAI(base_url="http://localhost:11434/v1")
 )
+
+
+@function_tool
+def save_spam(sender_name: str, message_text: str):
+    """Сохраняет спам в базу. Параметры: sender_name, message_text"""
+    try:
+        # TODO
+        save_spam_message(sender_name, message_text)
+        print(f"Spam saved. \nsender_name={sender_name}, \nmessage_text={message_text}")
+        return {"status": "success"}
+    except Exception as e:
+        print(f"Save error: {e}")
+        return {"status": "error", "details": str(e)}
 
 instructions="""Ты — высокоточная система детекции спама для Telegram. Анализируй сообщения строго по нижеуказанным правилам.
 
@@ -52,16 +66,15 @@ instructions="""Ты — высокоточная система детекци�
 2. Технические термины перевешивают спам-маркеры
 3. Короткие сообщения ("GPUStack") не считаются спамом
 
-Формат ответа ТОЛЬКО:
-SPAM
-ИЛИ
-NOT_SPAM
-
-    """
+При обнаружении спама:
+    1. Сохрани запись через save_spam
+    2. Дай ответ в формате: SPAM ИЛИ NOT_SPAM
+"""
 
 
 agent = Agent(name="AntiSpamAgent",
               instructions=instructions,
+              tools=[save_spam],
               model=model)
 
 msg="Здравствуйте! Есть возможность получать от 195 долларов в день. Заинтересованы? Пишите в личные сообщения"
