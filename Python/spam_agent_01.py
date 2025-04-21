@@ -31,9 +31,11 @@ class UserProfile:
 async def save_spam(wrapper: RunContextWrapper[UserProfile]):
     """Сохраняет спам в базу с использованием контекста сообщения"""
     try:
-        # TODO call save_spam_message
-        # save_spam_message(context.sender_full_name, context.message_text)
-        # print(f"Spam saved. \nsender_full_name={context.sender_full_nam}, \nmessage_text={context.message_text}")
+        # Извлекаем контекст из обертки
+        context = wrapper.context
+        # Вызываем функцию сохранения спама с актуальными данными
+        save_spam_message(context.sender_full_name, context.message_text)
+        print(f"Spam saved. \nsender_full_name={context.sender_full_name}, \nmessage_text={context.message_text}")
         return {"status": "success"}
     except Exception as e:
         print(f"Save error: {e}")
