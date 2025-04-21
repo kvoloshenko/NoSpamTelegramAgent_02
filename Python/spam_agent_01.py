@@ -1,4 +1,4 @@
-from agents import Agent, Runner, OpenAIChatCompletionsModel, AsyncOpenAI, function_tool
+from agents import Agent, Runner, OpenAIChatCompletionsModel, AsyncOpenAI, function_tool, RunContextWrapper, TResponseInputItem
 import os
 from dotenv import load_dotenv
 from spam_storage import save_spam_message
@@ -21,12 +21,19 @@ model = OpenAIChatCompletionsModel(
     openai_client=AsyncOpenAI(base_url="http://localhost:11434/v1")
 )
 
+@dataclass
+class UserProfile:
+    sender_full_name: str
+    message_text: str
+
+
 @function_tool
-async def save_spam(context: MessageContext):
+async def save_spam(wrapper: RunContextWrapper[UserProfile]):
     """Сохраняет спам в базу с использованием контекста сообщения"""
     try:
-        save_spam_message(context.sender_full_name, context.message_text)
-        print(f"Spam saved. \nsender_full_name={context.sender_full_nam}, \nmessage_text={context.message_text}")
+        # TODO call save_spam_message
+        # save_spam_message(context.sender_full_name, context.message_text)
+        # print(f"Spam saved. \nsender_full_name={context.sender_full_nam}, \nmessage_text={context.message_text}")
         return {"status": "success"}
     except Exception as e:
         print(f"Save error: {e}")
@@ -54,12 +61,16 @@ agent = Agent[MessageContext](
     model=model
 )
 
+convo_items: list[TResponseInputItem] = []
+
 # Создаем контекст с данными сообщения
-context = MessageContext(
-    sender_full_name="Konstantin Voloshenko",
-    message_text="Здравствуйте! Есть возможность получать от 195 долларов в день. Заинтересованы? Пишите в личные сообщения"
-)
+profile = UserProfile(sender_full_name="Konstantin Voloshenko",
+                      message_text="Здравствуйте! Есть возможность получать от 195 долларов в день. Заинтересованы? Пишите в личные сообщения")
+
+user_input = "Здравствуйте! Есть возможность получать от 195 долларов в день. Заинтересованы? Пишите в личные сообщения"
+convo_items.append({"content": user_input, "role": "user"})
 
 # Передаем данные в агент
-result = Runner.run_sync(agent, context)
-print(result.final_output)
+result = Runner.run_sync(agent, convo_items, context=profile)
+print(f"result: {result.final_output}")
+print(type(result))
