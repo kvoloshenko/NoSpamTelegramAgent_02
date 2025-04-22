@@ -7,6 +7,7 @@ from spam_checker import check_spam
 from spam_storage import save_spam_message
 from dotenv import load_dotenv
 from tools import block_user, delete_user_messages, forward_to_group
+from spam_agent_02 import agent_check_spam
 
 load_dotenv()
 
@@ -34,12 +35,15 @@ async def handle_message(message: types.Message):
     logger.info(f"Проверка сообщения: {message.text[:50]}...")
 
     # TODO
-    is_spam = await check_spam(message.text)
-    print(f'await check_spam({message.text})')
-    print(f'is_spam={is_spam}')
-    print(type(is_spam))
+    # is_spam = await check_spam(message.text)
+    await agent_check_spam(message)
+    # print(f'await check_spam({message.text})')
+    # print(f'is_spam={is_spam}')
+    # print(type(is_spam))
     # is_spam = False
     # is_spam = True
+
+    is_spam = False
 
     if is_spam:
         # await message.reply("Внимание: это сообщение может быть спамом.")
@@ -62,6 +66,7 @@ async def handle_message(message: types.Message):
 async def main():
     logger.info("Запуск бота...")
     await dp.start_polling(bot)
+
 
 if __name__ == '__main__':
     try:
