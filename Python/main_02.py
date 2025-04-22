@@ -48,11 +48,12 @@ async def handle_message(message: types.Message):
             sender_full_name=message.from_user.full_name,
             message_text=message.text
         )
-    #     # Пересылка сообщения в другую группу
-    #     if TARGET_GROUP_ID:
-    #         await forward_to_group(message, TARGET_GROUP_ID)
-    #     else:
-    #         logger.warning("ID целевой группы не указан в .env")
+        # Пересылка сообщения в другую группу
+        if TARGET_GROUP_ID:
+            print(f'TARGET_GROUP_ID ={TARGET_GROUP_ID}')
+            await forward_to_group(message, TARGET_GROUP_ID)
+        else:
+            logger.warning("ID целевой группы не указан в .env")
     #     await delete_user_messages(message)
     #     # await block_user(message)
     # else:
