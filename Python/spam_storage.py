@@ -17,6 +17,6 @@ def save_spam_message(sender_full_name: str, message_text: str):
             json.dump(spam_data, f, ensure_ascii=False)
             f.write('\n')
         logger.info("Spam logged successfully")
-        print(f"Spam saved. \nsender_full_name={sender_full_name}, \nmessage_text={message_text}")
+        logger.info(f"Spam saved. \nsender_full_name={sender_full_name}, \nmessage_text={message_text}")
     except Exception as e:
         logger.error(f"Logging failed: {e}")
