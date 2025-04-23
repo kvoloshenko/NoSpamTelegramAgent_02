@@ -1,4 +1,4 @@
-# NoSpamTelegram_02
+# NoSpamTelegramAgent_02
 
 ## OpenAI Agents SDK Ollama
 https://mer.vin/2025/03/openai-agents-sdk-ollama/
