@@ -3,7 +3,7 @@ import logging
 import os
 from aiogram import Bot, Dispatcher, types
 from dotenv import load_dotenv
-from spam_agent_04 import agent_check_spam
+from spam_agent import agent_check_spam
 load_dotenv()
 
 TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
