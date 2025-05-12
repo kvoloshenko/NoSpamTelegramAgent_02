@@ -53,7 +53,9 @@ class TaskContext:
 
 
 async def _delete_user_messages(wrapper: RunContextWrapper[TaskContext]) -> bool:
+
     ctx = wrapper.context
+    print(f'delete_user_messages .... ctx.message.message_id={ctx.message.message_id}')
     try:
         await ctx.message.delete()
         logger.info("Сообщение %s удалено", ctx.message.message_id)
@@ -63,19 +65,10 @@ async def _delete_user_messages(wrapper: RunContextWrapper[TaskContext]) -> bool
         return False
 
 
-async def _save_spam(wrapper: RunContextWrapper[TaskContext]):
-    ctx = wrapper.context
-    try:
-        save_spam_message(ctx.sender_full_name, ctx.message_text)
-        logger.info("Spam saved: sender=%s", ctx.sender_full_name)
-        return {"status": "success"}
-    except Exception as exc:
-        logger.exception("Ошибка при сохранении спама: %s", exc)
-        return {"status": "error", "details": str(exc)}
-
 
 async def _forward_message(wrapper: RunContextWrapper[TaskContext]):
     ctx = wrapper.context
+    print(f'forward_message ....ctx.message.message_id={ctx.message.message_id}')
     try:
         await ctx.message.bot.forward_message(
             chat_id=ctx.target_group_id,
@@ -96,9 +89,9 @@ async def _forward_message(wrapper: RunContextWrapper[TaskContext]):
 
 @function_tool
 async def process_spam(wrapper: RunContextWrapper[TaskContext]):
-    """Полный цикл обработки спама (save ➜ forward ➜ delete)."""
+    """Полный цикл обработки спама (forward ➜ delete)."""
+    print(f'process_spam ....')
 
-    await _save_spam(wrapper)
     await _forward_message(wrapper)
     await _delete_user_messages(wrapper)
 
@@ -159,4 +152,5 @@ async def agent_check_spam(message: types.Message):
 
     result = await Runner.run(agent, convo, context=task_context)
     logger.info("Agent output: %s", result.final_output)
+
     return result
