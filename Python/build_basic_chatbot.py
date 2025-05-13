@@ -52,24 +52,13 @@ graph_builder.add_edge(START, "chatbot")
 
 graph = graph_builder.compile()
 
-from IPython.display import Image, display
-
 try:
-    display(Image(graph.get_graph().draw_mermaid_png()))
-    # TODO
-    # graph_image = Image(graph.get_graph().draw_mermaid_png())
-    # display(graph_image)
+
     # Сохраняем картинку в файл
     graph_image = graph.get_graph().draw_mermaid_png()
     with open("../graph_image.png", "wb") as png:
         png.write(graph_image)
 
-    # Открытие и отображение изображения
-    from PIL import Image as PILImage
-    import io
-
-    img = PILImage.open("../graph_image.png")
-    img.show()
 except Exception:
     # This requires some extra dependencies and is optional
     # Это требует некоторых дополнительных зависимостей и не является обязательным
@@ -90,7 +79,7 @@ while True:
         stream_graph_updates(user_input)
     except:
         # fallback if input() is not available
-        user_input = "Что вы знаете о LangGraph?"
+        user_input = "Что ты знаешь о LangGraph?"
         print("User: " + user_input)
         stream_graph_updates(user_input)
         break

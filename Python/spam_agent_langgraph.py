@@ -218,6 +218,17 @@ graph.add_edge("delete_user_message", END)
 # ------------------------------------------------------------------ #
 graph_executor = graph.compile()
 
+try:
+    logger.info("Сохраняем картинку в файл")
+    # Сохраняем картинку в файл
+    graph_image = graph_executor.get_graph().draw_mermaid_png()
+    with open("../graph_image.png", "wb") as png:
+        png.write(graph_image)
+
+except Exception:
+    # This requires some extra dependencies and is optional
+    # Это требует некоторых дополнительных зависимостей и не является обязательным
+    logger.info(" Не удалось сохранить картинку в файл")
 
 # ------------------------------------------------------------------ #
 # ⬇️ Вызов из обработчика Telegram
